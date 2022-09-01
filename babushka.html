@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro B</title>
+
+    <style>
+body{
+    cursor: pointer;
+}
+        #holder{
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(250px, 1fr));
+            gap: 20px;
+            margin-inline:10% ;
+            cursor: pointer;
+        }
+
+        article{
+        padding-block-end: -10px;
+        padding-block-start: 10px;
+        padding-inline: 15px;
+        margin: 20px;
+        align-items: center;
+        border: solid 8px rgb(227, 241, 253);
+        }
+        article #luk{
+            margin-block: 15px;
+            margin-right: 720px;
+            text-decoration: underline;
+        }
+        article #luk:hover{
+            font-weight: 700;
+            color:rgb(252, 171, 20);
+        }
+       article h2:hover{
+       color:rgb(252, 171, 20);
+       }
+        
+        img{
+            max-width: 100%;
+        }
+
+        #pop_up{
+            position:fixed;
+            width: 100%;
+            height: 100%;
+            top: 0vw;
+            left:0vw;
+            justify-content: center;
+            display: none;
+            align-items: center;
+            background-color: white;
+            text-align: center;  
+        }
+        #pop_up img{
+            width: 70%;
+            height: 70%;
+        }
+
+        header{
+            text-align: center;
+            margin-block: 30px;
+            padding-top: 30px;
+            padding-bottom: 20px;
+            background-color: rgb(227, 241, 253);
+        }
+        header h1{
+            font-size: 3.4rem;
+            color: rgb(252, 171, 20);
+        }
+        header h3{
+            margin-top: -25px;
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        button{
+            border: none;
+            background-color: white;
+            font-size: 1.4rem;
+            margin-inline: 20px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        button:hover{
+        color: rgb(252, 171, 20);
+       }
+
+           
+        nav{
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .valgt{
+            color: rgb(252, 171, 20);
+            text-decoration: underline;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>BISTRO BABUSHKA</h1>
+        <h2>Oplev et rusisk smagsunivers </h2>
+    </header>
+    <nav>
+        <button data-kategori="alle" class="valgt">Alle</button>
+        <button data-kategori="forretter" >Forretter</button>
+        <button data-kategori="hovedretter">Hovedretter</button>
+        <button data-kategori="desserter">Desserter</button>
+        <button data-kategori="drikkevarer">Drikkevarer</button>
+    </nav>
+
+<main id="holder"></main>
+<template>
+    <article>
+        <img src="" alt="">
+        <h2></h2>
+        
+    </article>
+</template>
+
+
+<div id="pop_up">
+    
+    <article>
+        <div id="luk">Tilbage</div>
+        <img src="" alt="">
+        <h2></h2>
+        <p class="kort_beskrivelse"></p>
+        <p class="oprindelse"></p>
+        <p class="pris"></p>
+    </article>
+</div>
+
+
+    <script>
+        const header =document.querySelector("header h3");
+        const medieurl="https://babushka-dd8a.restdb.io/rest/menu";
+        const myHeaders ={
+                "x-apikey":"600ec2fb1346a1524ff12de4"
+            }
+            
+            document.addEventListener("DOMContentLoaded",start)
+            let kategori;
+            let filter = "alle";
+            function start(){
+                const filterknapper=document.querySelectorAll("nav button");
+                filterknapper.forEach(knap=> knap.addEventListener("click", filtrerRetter));
+                loadJSON();
+            }
+
+            function filtrerRetter(){
+                filter = this.dataset.kategori;
+                document.querySelector(".valgt").classList.remove("valgt");
+                this.classList.add("valgt")
+        visRetter();
+    
+            }
+
+        async function loadJSON(){
+            const JSONdata =await fetch("https://babushka-dd8a.restdb.io/rest/menu",{
+                headers:myHeaders
+            });
+
+        kategori =await JSONdata.json();
+        console.log("kategori",kategori);
+        visRetter();
+        }
+
+        function visRetter(){
+            const dest=document.querySelector("#holder");
+            const skabelon = document.querySelector("template").content;
+            dest.textContent="";
+
+            kategori.forEach(ret => {
+                console.log("kategori",ret.kategori);
+                if(filter == ret.kategori|| filter=="alle"){
+                const klon =skabelon.cloneNode(true);
+
+                klon.querySelector("h2").textContent=ret.navn;
+                klon.querySelector("article").addEventListener("click",()=>visDetaljer(ret));
+                klon.querySelector("img").src = "billeder/"+ ret.billednavn+ "-md.jpg";
+               // klon.querySelector(".efternavn").textContent=`Efternavn: ${person.efternavn}`;
+                holder.appendChild(klon);
+                }
+            })
+        }
+        pop_up.addEventListener("click",()=>pop_up.style.display="none");
+
+        function visDetaljer(retData){
+            console.log(retData);
+
+            const pop_up=document.querySelector("#pop_up");
+            pop_up.style.display = "flex";    
+            pop_up.querySelector("h2").textContent=retData.navn;
+            pop_up.querySelector(".kort_beskrivelse").textContent = `Beskrivelse: ${retData.kortbeskrivelse}`;
+            pop_up.querySelector(".oprindelse").textContent = `Oprindelse: ${retData.oprindelsesregion}`;
+            pop_up.querySelector(".pris").textContent = `Pris: ${retData.pris}kr`;
+            pop_up.querySelector("img").src = "billeder/"+ retData.billednavn+ "-md.jpg";
+            document.querySelector("#luk").addEventListener("click",()=>pop_up.style.display="none");
+           
+        }
+
+    </script>
+</body>
+</html>
