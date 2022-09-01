@@ -9,6 +9,7 @@
     <style>
 body{
     cursor: pointer;
+    
 }
         #holder{
             display: grid;
@@ -24,7 +25,9 @@ body{
         padding-inline: 15px;
         margin: 20px;
         align-items: center;
-        border: solid 8px rgb(227, 241, 253);
+        font-size: 0.8rem;
+        color: rgb(10, 56, 10);
+       
         }
         article #luk{
             margin-block: 15px;
@@ -60,27 +63,11 @@ body{
             height: 70%;
         }
 
-        header{
-            text-align: center;
-            margin-block: 30px;
-            padding-top: 30px;
-            padding-bottom: 20px;
-            background-color: rgb(227, 241, 253);
-        }
-        header h1{
-            font-size: 3.4rem;
-            color: rgb(252, 171, 20);
-        }
-        header h3{
-            margin-top: -25px;
-            font-size: 1.5rem;
-            font-weight: 300;
-        }
-
         button{
             border: none;
+            color: rgb(10, 56, 10);
             background-color: white;
-            font-size: 1.4rem;
+            font-size: 1.7rem;
             margin-inline: 20px;
             cursor: pointer;
             font-family: 'Times New Roman', Times, serif;
@@ -93,6 +80,8 @@ body{
         nav{
             text-align: center;
             margin-bottom: 30px;
+            margin-top: 40px;
+            padding-top: 30px;
         }
 
         .valgt{
@@ -100,15 +89,59 @@ body{
             text-decoration: underline;
         }
 
+    #myVideo {
+  position: relative;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+
+}
+.content h1 {
+  position: absolute;
+  left: 215px;
+  top: 70px;
+  font-size: 15rem;
+  color: rgb(252, 171, 20);
+}
+
+.content button {
+  position: absolute;
+  left: 650px;
+  top: 700px;
+  font-size: 2.4rem;
+  color: rgb(252, 171, 20);
+  background-color:transparent;
+}
+.arrow {
+  border: solid rgb(252, 171, 20);
+  border-width: 0 3px 3px 0;
+  position: absolute;
+  left: 715px;
+  top: 753px;
+  display: inline-block;
+  padding: 3px;
+}
+.down {
+  transform: rotate(45deg);
+}
 
     </style>
 </head>
 <body>
+
     <header>
-        <h1>BISTRO BABUSHKA</h1>
-        <h2>Oplev et rusisk smagsunivers </h2>
+        <video autoplay muted loop id="myVideo">
+            <source src="kitchen.mp4" type="video/mp4">
+          </video>
+
+        <div class="content">
+            <h1>Babushka</h1>
+            <button onclick="myFunction()">Menu</button>
+            <i class="arrow down"></i>
+        </div>
     </header>
-    <nav>
+    <nav id="nav">
         <button data-kategori="alle" class="valgt">Alle</button>
         <button data-kategori="forretter" >Forretter</button>
         <button data-kategori="hovedretter">Hovedretter</button>
@@ -117,6 +150,7 @@ body{
     </nav>
 
 <main id="holder"></main>
+
 <template>
     <article>
         <img src="" alt="">
@@ -124,7 +158,6 @@ body{
         
     </article>
 </template>
-
 
 <div id="pop_up">
     
@@ -139,13 +172,20 @@ body{
 </div>
 
 
+
+
     <script>
-        const header =document.querySelector("header h3");
+       const element = document.getElementById("nav");
         const medieurl="https://babushka-dd8a.restdb.io/rest/menu";
         const myHeaders ={
                 "x-apikey":"600ec2fb1346a1524ff12de4"
             }
             
+            function myFunction() {
+  const element = document.getElementById("nav");
+  element.scrollIntoView();
+}
+
             document.addEventListener("DOMContentLoaded",start)
             let kategori;
             let filter = "alle";
